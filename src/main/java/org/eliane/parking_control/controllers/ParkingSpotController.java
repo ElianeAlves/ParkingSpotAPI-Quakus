@@ -7,10 +7,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eliane.parking_control.models.ParkingSpot;
-import org.eliane.parking_control.repositories.ParkingSpotRepository;
 import org.eliane.parking_control.services.ParkingSpotService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,9 +20,6 @@ public class ParkingSpotController {
     @Inject
     private ParkingSpotService parkingSpotService;
 
-    @Inject
-    private ParkingSpotRepository parkingSpotRepository;
-
     @GET
     public Response getParkingSpot() {
         List<ParkingSpot> parkingSpotList = parkingSpotService.getParkingSpot();
@@ -33,29 +28,36 @@ public class ParkingSpotController {
 
     @GET
     @Path("/{id}")
-    public Response getParkingSpotById(@PathParam("id") UUID id) {
-        ParkingSpot parkingSpot = parkingSpotRepository.findById(id);
+    public Response getParkingSpotById(@PathParam("id") UUID uuid) {
+        ParkingSpot parkingSpot = parkingSpotService.getParkingSpotByID(uuid);
         return Response.ok(parkingSpot).build();
     }
 
     @POST
     @Transactional
     public Response postParkingSpot(@Valid ParkingSpot parkingSpot) {
-        parkingSpot.setRegistrationDate(LocalDateTime.now());
-        parkingSpotRepository.persist(parkingSpot);
+        parkingSpotService.postParkingSpot(parkingSpot);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
-    public Response deleteParkingSpot(@PathParam("id") UUID id) {
-        boolean deleted = parkingSpotRepository.deleteById(id);
+    public Response deleteParkingSpotByID(@PathParam("id") UUID uuid) {
+        boolean deleted = parkingSpotService.deleteParkingSpotByID(uuid);
 
         if (!deleted) {
             throw new NotFoundException("Parking spot not found");
         }
 
-        return Response.noContent().build(); // 204
+        return Response.noContent().build();
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Transactional
+    public Response putParkingSpot(@PathParam(value = "id") UUID uuid, ParkingSpot parkingSpotBody) {
+        ParkingSpot parkingSpot = parkingSpotService.putParkingSpot(uuid, parkingSpotBody);
+        return Response.ok(parkingSpot).build();
     }
 }
