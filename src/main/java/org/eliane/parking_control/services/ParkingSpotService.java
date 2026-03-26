@@ -3,6 +3,7 @@ package org.eliane.parking_control.services;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
+import org.eliane.parking_control.dtos.ParkingSpotRequestDTO;
 import org.eliane.parking_control.dtos.ParkingSpotResponseDTO;
 import org.eliane.parking_control.models.ParkingSpot;
 import org.eliane.parking_control.repositories.ParkingSpotRepository;
@@ -29,9 +30,11 @@ public class ParkingSpotService {
         return ParkingSpotResponseDTO.paraDTO(entity);
     }
 
-    public void postParkingSpot(ParkingSpot parkingSpot) {
-        parkingSpot.setRegistrationDate(LocalDateTime.now());
-        parkingSpotRepository.persist(parkingSpot);
+    public ParkingSpotResponseDTO postParkingSpot(ParkingSpotRequestDTO request) {
+        ParkingSpot entity = request.paraEntidade();
+        entity.setRegistrationDate(LocalDateTime.now());
+        parkingSpotRepository.persist(entity);
+        return ParkingSpotResponseDTO.paraDTO(entity);
     }
 
     public boolean deleteParkingSpotByID(UUID uuid) {

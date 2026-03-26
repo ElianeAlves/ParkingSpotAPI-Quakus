@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eliane.parking_control.dtos.ParkingSpotRequestDTO;
 import org.eliane.parking_control.dtos.ParkingSpotResponseDTO;
 import org.eliane.parking_control.models.ParkingSpot;
 import org.eliane.parking_control.services.ParkingSpotService;
@@ -36,8 +37,8 @@ public class ParkingSpotController {
 
     @POST
     @Transactional
-    public Response postParkingSpot(@Valid ParkingSpot parkingSpot) {
-        parkingSpotService.postParkingSpot(parkingSpot);
+    public Response postParkingSpot(@Valid ParkingSpotRequestDTO request) {
+        parkingSpotService.postParkingSpot(request);
         return Response.status(Response.Status.CREATED).build();
     }
 
