@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eliane.parking_control.dtos.ParkingSpotResponseDTO;
 import org.eliane.parking_control.models.ParkingSpot;
 import org.eliane.parking_control.services.ParkingSpotService;
 
@@ -22,14 +23,14 @@ public class ParkingSpotController {
 
     @GET
     public Response getParkingSpot() {
-        List<ParkingSpot> parkingSpotList = parkingSpotService.getParkingSpot();
+        List<ParkingSpotResponseDTO> parkingSpotList = parkingSpotService.getParkingSpot();
         return Response.ok(parkingSpotList).build();
     }
 
     @GET
     @Path("/{id}")
     public Response getParkingSpotById(@PathParam("id") UUID uuid) {
-        ParkingSpot parkingSpot = parkingSpotService.getParkingSpotByID(uuid);
+        ParkingSpotResponseDTO parkingSpot = parkingSpotService.getParkingSpotByID(uuid);
         return Response.ok(parkingSpot).build();
     }
 

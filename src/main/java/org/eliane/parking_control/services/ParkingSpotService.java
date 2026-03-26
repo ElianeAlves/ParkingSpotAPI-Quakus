@@ -2,6 +2,8 @@ package org.eliane.parking_control.services;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
+import org.eliane.parking_control.dtos.ParkingSpotResponseDTO;
 import org.eliane.parking_control.models.ParkingSpot;
 import org.eliane.parking_control.repositories.ParkingSpotRepository;
 
@@ -15,12 +17,16 @@ public class ParkingSpotService {
     @Inject
     private ParkingSpotRepository parkingSpotRepository;
 
-    public List<ParkingSpot> getParkingSpot() {
-        return parkingSpotRepository.listAll();
+    public List<ParkingSpotResponseDTO> getParkingSpot() {
+        return parkingSpotRepository.listAll().stream().map(ParkingSpotResponseDTO::paraDTO).toList();
     }
 
-    public ParkingSpot getParkingSpotByID(UUID uuid) {
-        return parkingSpotRepository.findById(uuid);
+    public ParkingSpotResponseDTO getParkingSpotByID(UUID uuid) {
+        var entity = parkingSpotRepository.findById(uuid);
+        if(entity == null) {
+            throw new NotFoundException("Vaga de estacionamento não encontrada.");
+        }
+        return ParkingSpotResponseDTO.paraDTO(entity);
     }
 
     public void postParkingSpot(ParkingSpot parkingSpot) {
