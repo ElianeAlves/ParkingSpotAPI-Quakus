@@ -38,8 +38,8 @@ public class ParkingSpotController {
     @POST
     @Transactional
     public Response postParkingSpot(@Valid ParkingSpotRequestDTO request) {
-        parkingSpotService.postParkingSpot(request);
-        return Response.status(Response.Status.CREATED).build();
+        ParkingSpotResponseDTO response = parkingSpotService.postParkingSpot(request);
+        return Response.status(Response.Status.CREATED).entity(response).build();
     }
 
     @DELETE
@@ -49,7 +49,7 @@ public class ParkingSpotController {
         boolean deleted = parkingSpotService.deleteParkingSpotByID(uuid);
 
         if (!deleted) {
-            throw new NotFoundException("Parking spot not found");
+            throw new NotFoundException("Vaga não encontrada.");
         }
 
         return Response.noContent().build();
@@ -58,7 +58,7 @@ public class ParkingSpotController {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response putParkingSpot(@PathParam(value = "id") UUID uuid, ParkingSpot parkingSpotBody) {
+    public Response putParkingSpot(@PathParam(value = "id") UUID uuid, ParkingSpotRequestDTO parkingSpotBody) {
         ParkingSpot parkingSpot = parkingSpotService.putParkingSpot(uuid, parkingSpotBody);
         return Response.ok(parkingSpot).build();
     }

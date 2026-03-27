@@ -31,7 +31,7 @@ public class ParkingSpotService {
     }
 
     public ParkingSpotResponseDTO postParkingSpot(ParkingSpotRequestDTO request) {
-        ParkingSpot entity = request.paraEntidade();
+        ParkingSpot entity = request.toEntity();
         entity.setRegistrationDate(LocalDateTime.now());
         parkingSpotRepository.persist(entity);
         return ParkingSpotResponseDTO.paraDTO(entity);
@@ -41,18 +41,16 @@ public class ParkingSpotService {
         return parkingSpotRepository.deleteById(uuid);
     }
 
-    public ParkingSpot putParkingSpot(UUID uuid, ParkingSpot parkingSpotBody) {
-        ParkingSpot parkingSpot = parkingSpotRepository.findById(uuid);
+    public ParkingSpot putParkingSpot(UUID id, ParkingSpotRequestDTO dto) {
+        ParkingSpot entity = parkingSpotRepository.findById(id);
 
-        parkingSpot.setApartment(parkingSpotBody.getApartment());
-        parkingSpot.setBlock(parkingSpotBody.getBlock());
-        parkingSpot.setBrandCar(parkingSpotBody.getBrandCar());
-        parkingSpot.setColorCar(parkingSpotBody.getColorCar());
-        parkingSpot.setLicensePlateCar(parkingSpotBody.getLicensePlateCar());
-        parkingSpot.setParkingSpotNumber(parkingSpotBody.getParkingSpotNumber());
-        parkingSpot.setRegistrationDate(LocalDateTime.now());
-        parkingSpot.setResponsibleName(parkingSpotBody.getResponsibleName());
+        if (entity == null) {
+            throw new NotFoundException();
+        }
 
-        return parkingSpot;
+        dto.updateEntity(entity);
+        entity.setRegistrationDate(LocalDateTime.now());
+
+        return entity;
     }
 }

@@ -33,18 +33,22 @@ public class ParkingSpotRequestDTO {
     @NotBlank
     private String responsibleName;
 
-    public ParkingSpot paraEntidade() {
+    public ParkingSpot toEntity() {
         ParkingSpot entity = new ParkingSpot();
 
+        updateEntity(entity);
+
+        return entity;
+    }
+
+    public void updateEntity(ParkingSpot entity) {
         entity.setApartment(this.apartment);
         entity.setBlock(this.block);
         entity.setBrandCar(this.brandCar);
-        entity.setColorCar(this.getColorCar());
+        entity.setColorCar(this.colorCar);
         entity.setLicensePlateCar(this.licensePlateCar);
         entity.setModelCar(this.modelCar);
         entity.setParkingSpotNumber(this.parkingSpotNumber);
         entity.setResponsibleName(this.responsibleName);
-
-        return entity;
     }
 }
